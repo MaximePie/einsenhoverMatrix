@@ -1,0 +1,63 @@
+#root {
+  height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: cornflowerblue;
+}
+
+.App {
+  width: 900px;
+  height: 600px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  background-color: floralwhite;
+  border-radius: 2px;
+}
+
+.Tasks__categories {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+
+  justify-content: center;
+  align-items: center;
+}
+
+.Tasks {
+  margin: 2em 0;
+}
+
+.Task__wording {
+  background-color: initial;
+  transition: 250ms background-color ease;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #f0ebe1;
+    transition: 250ms background-color ease;
+  }
+}
+
+.Tasks__category {
+
+  height: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 8px;
+
+  &:first-child, &:nth-child(3) {
+    border-right: 1px solid gray;
+  }
+
+  &:first-child, &:nth-child(2) {
+    border-bottom: 1px solid gray;
+  }
+}
