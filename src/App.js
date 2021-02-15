@@ -29,30 +29,35 @@ function App() {
 
   return (
     <div className="App">
-      <div>
+      <div className="NewTask">
         <input
           type="text"
           placeholder={"Nouvelle tâche"}
           value={newTask}
           onChange={(event) => setNewTask(event.target.value)}
+          className="NewTask__text"
         />
-        <label htmlFor="">
-          Important
-          <input
-            type="checkbox"
-            onChange={() => setNewTaskImportance(!isNewTaskImportant)}
-            checked={isNewTaskImportant}
-          />
-        </label>
-        <label htmlFor="">
-          Urgent
-          <input
-            type="checkbox"
-            onChange={() => setNewTaskEmergency(!isNewTaskUrgent)}
-            checked={isNewTaskUrgent}
-          />
-        </label>
-        <button onClick={addTask}>Write</button>
+        <div className="NewTask__checkboxes">
+          <label class="NewTask__checkbox">
+            Important
+            <input
+              type="checkbox"
+              onChange={() => setNewTaskImportance(!isNewTaskImportant)}
+              checked={isNewTaskImportant}
+            />
+          </label>
+          <label class="NewTask__checkbox">
+            Urgent
+            <input
+              type="checkbox"
+              onChange={() => setNewTaskEmergency(!isNewTaskUrgent)}
+              checked={isNewTaskUrgent}
+            />
+          </label>
+        </div>
+        <div className="NewTask__action">
+          <button className="PrimaryButton" onClick={addTask}>Enregistrer</button>
+        </div>
       </div>
       <div className="Tasks">
         {tasks && displayTasks()}
