@@ -1,8 +1,9 @@
 import './App.scss';
 import Firebase from 'firebase';
+import "firebase/auth";
+
 import * as React from "react";
 import {useState} from "react";
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const config = {
@@ -19,6 +20,13 @@ const config = {
 function App() {
   React.useEffect(() => {
     Firebase.initializeApp(config);
+    Firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        setUser(user);
+      } else {
+        // No user is signed in.
+      }
+    });
     fetchTasks();
   }, []);
 
@@ -26,44 +34,96 @@ function App() {
   const [newTask, setNewTask] = useState('');
   const [isNewTaskImportant, setNewTaskImportance] = useState(false);
   const [isNewTaskUrgent, setNewTaskEmergency] = useState(false);
+  const [mail, setMail] = useState('maxime.pie.mail@gmail.com');
+  const [password, setPassword] = useState('hahaha');
+  const [user, setUser] = useState(undefined);
+
 
   return (
     <div className="App">
-      <div className="NewTask">
-        <input
-          type="text"
-          placeholder={"Nouvelle tâche"}
-          value={newTask}
-          onChange={(event) => setNewTask(event.target.value)}
-          className="NewTask__text"
-        />
-        <div className="NewTask__checkboxes">
-          <label class="NewTask__checkbox">
-            Important
-            <input
-              type="checkbox"
-              onChange={() => setNewTaskImportance(!isNewTaskImportant)}
-              checked={isNewTaskImportant}
-            />
-          </label>
-          <label class="NewTask__checkbox">
-            Urgent
-            <input
-              type="checkbox"
-              onChange={() => setNewTaskEmergency(!isNewTaskUrgent)}
-              checked={isNewTaskUrgent}
-            />
-          </label>
+      {!user && (
+        <div>
+          <div>
+            <p>Veuillez vous connecter pour continuer</p>
+            <div>
+              <input type="text" value={mail} onChange={(event) => setMail(event.target.value)}/>
+              <input type="text" value={password} onChange={(event) => setPassword(event.target.value)}/>
+              <button onClick={login}>Se connected</button>
+            </div>
+          </div>
+          <div>
+            <p>Ou bien vous inscrire ici</p>
+            <input type="text" value={mail} onChange={(event) => setMail(event.target.value)}/>
+            <input type="text" value={password} onChange={(event) => setPassword(event.target.value)}/>
+            <button onClick={register}>S'inscrire</button>
+          </div>
         </div>
-        <div className="NewTask__action">
-          <button className="PrimaryButton" onClick={addTask}>Enregistrer</button>
-        </div>
-      </div>
-      <div className="Tasks">
-        {tasks && displayTasks()}
-      </div>
+      )}
+      {user && (
+        <>
+          <div className="NewTask">
+            <input
+              type="text"
+              placeholder={"Nouvelle tâche"}
+              value={newTask}
+              onChange={(event) => setNewTask(event.target.value)}
+              className="NewTask__text"
+            />
+            <div className="NewTask__checkboxes">
+              <label class="NewTask__checkbox">
+                Important
+                <input
+                  type="checkbox"
+                  onChange={() => setNewTaskImportance(!isNewTaskImportant)}
+                  checked={isNewTaskImportant}
+                />
+              </label>
+              <label className="NewTask__checkbox">
+                Urgent
+                <input
+                  type="checkbox"
+                  onChange={() => setNewTaskEmergency(!isNewTaskUrgent)}
+                  checked={isNewTaskUrgent}
+                />
+              </label>
+            </div>
+            <div className="NewTask__action">
+              <button className="PrimaryButton" onClick={addTask}>Enregistrer</button>
+            </div>
+          </div>
+          <div className="Tasks">
+            {tasks && displayTasks()}
+          </div>
+        </>
+      )}
     </div>
   );
+
+  function login() {
+    Firebase.auth().signInWithEmailAndPassword(mail, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        setUser(user);
+      })
+      .catch((error) => {
+      });
+  }
+
+  function register() {
+    Firebase.auth().createUserWithEmailAndPassword(mail, password)
+      .then((userCredential) => {
+        // Signed in
+        var user = userCredential.user;
+        setUser(user);
+        // ...
+      })
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // ..
+      });
+  }
 
   function displayTasks() {
     const formatedTasks = [];
