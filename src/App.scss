@@ -1,3 +1,9 @@
+.Logout {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
 @mixin for-phone {
   @media (max-width: 999px) {
     @content;
@@ -43,6 +49,8 @@
 
   background-color: floralwhite;
   border-radius: 2px;
+
+  position: relative;
 
   @include for-phone {
     width: calc(100% - 16px);

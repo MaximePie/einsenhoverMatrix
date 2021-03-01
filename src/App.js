@@ -38,6 +38,13 @@ function App() {
   const [password, setPassword] = useState('hahaha');
   const [user, setUser] = useState(undefined);
 
+  React.useEffect(() => {
+    if (user) {
+      fetchTasks();
+    }
+  }, [user]);
+
+
 
   return (
     <div className="App">
@@ -62,6 +69,7 @@ function App() {
       {user && (
         <>
           <div className="NewTask">
+            <button onClick={logout} className={"Logout"}>X</button>
             <input
               type="text"
               placeholder={"Nouvelle tâche"}
@@ -70,7 +78,7 @@ function App() {
               className="NewTask__text"
             />
             <div className="NewTask__checkboxes">
-              <label class="NewTask__checkbox">
+              <label className="NewTask__checkbox">
                 Important
                 <input
                   type="checkbox"
@@ -106,23 +114,23 @@ function App() {
         const user = userCredential.user;
         setUser(user);
       })
-      .catch((error) => {
-      });
   }
 
   function register() {
     Firebase.auth().createUserWithEmailAndPassword(mail, password)
       .then((userCredential) => {
         // Signed in
-        var user = userCredential.user;
+        const user = userCredential.user;
         setUser(user);
         // ...
       })
-      .catch((error) => {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // ..
-      });
+  }
+
+  function logout() {
+    Firebase.auth().signOut().then(() => {
+      setUser(undefined);
+    }).catch(() => {
+    });
   }
 
   function displayTasks() {
