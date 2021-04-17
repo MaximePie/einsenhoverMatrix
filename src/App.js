@@ -27,15 +27,14 @@ function App() {
         // No user is signed in.
       }
     });
-    fetchTasks();
   }, []);
 
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
   const [isNewTaskImportant, setNewTaskImportance] = useState(false);
   const [isNewTaskUrgent, setNewTaskEmergency] = useState(false);
-  const [mail, setMail] = useState('maxime.pie.mail@gmail.com');
-  const [password, setPassword] = useState('hahaha');
+  const [mail, setMail] = useState('');
+  const [password, setPassword] = useState('');
   const [user, setUser] = useState(undefined);
 
   React.useEffect(() => {
@@ -179,10 +178,13 @@ function App() {
    */
   function removeTask(removedTask) {
     const updatedTasks = [...tasks].filter(task => task !== removedTask);
-    Firebase.database().ref('/tasks').set(updatedTasks).then(fetchTasks);
+    const userId = user.uid;
+    Firebase.database().ref(`/users/${userId}/tasks`).set(updatedTasks).then(fetchTasks);
   }
 
   function addTask() {
+    const userId = user.uid;
+
     const updatedTasks = [...tasks];
     updatedTasks.push({
       wording: newTask,
@@ -190,7 +192,7 @@ function App() {
       isImportant: isNewTaskImportant,
     });
 
-    Firebase.database().ref('/tasks').set(updatedTasks).then(() => {
+    Firebase.database().ref(`users/${userId}/tasks`).set(updatedTasks).then(() => {
       fetchTasks();
       setNewTask('');
       setNewTaskImportance(false);
@@ -199,7 +201,8 @@ function App() {
   }
 
   function fetchTasks() {
-    let ref = Firebase.database().ref('/tasks');
+    const userId = user.uid;
+    let ref = Firebase.database().ref(`users/${userId}/tasks`);
     ref.on('value', snapshot => {
       const state = snapshot.val();
       setTasks(state || []);
