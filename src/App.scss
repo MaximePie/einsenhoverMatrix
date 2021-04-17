@@ -38,8 +38,7 @@
 }
 
 .App {
-  width: 900px;
-  height: 600px;
+  width: 1000px;
   padding-top: 8px;
 
   display: flex;
@@ -75,6 +74,10 @@
 .Task__wording {
   background-color: initial;
   transition: 250ms background-color ease;
+  border-bottom: 1px #e7e7e7 solid;
+  padding-bottom: 0.25rem;
+  width: 100%;
+  margin-bottom: 0.5rem;
 
   &:hover {
     cursor: pointer;
@@ -85,11 +88,12 @@
 
 .Tasks__category {
 
-  height: 100%;
+  height: 200px;
   display: flex;
   align-items: center;
   flex-direction: column;
   padding: 8px;
+  overflow-y: auto;
 
   &:first-child, &:nth-child(3) {
     border-right: 1px solid gray;
